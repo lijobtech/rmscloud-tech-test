@@ -43,7 +43,7 @@ Follow these simple steps to a local copy up and running,
 
 1.  Clone the repo:
     ```sh
-    git clone <your-repo-url>
+    git clone git@github.com:lijobtech/rmscloud-tech-test.git
     ```
 2.  Navigate to the project directory and install NPM packages:
     ```sh
