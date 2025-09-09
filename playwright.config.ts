@@ -4,7 +4,7 @@ export default defineConfig({
   testDir: './src/tests',
   fullyParallel: true,
   retries: 0, // No retries for the assessment purpose
-  workers: 1,
+  workers: 2, // Limiting to 2 workers for the assessment purpose. Also not added any CI environment variables
   reporter: 'html',
   /* Configure projects for major browsers */
   projects: [

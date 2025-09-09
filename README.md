@@ -1,6 +1,6 @@
 # RMS Cloud Take Home Challenge - Automating Booking Flow
 
-A basic test automation suite covering the end-to-end booking workflow for the RMS Cloud application designed in Page Object Model framework principles using Playwright's native out of the box implementation with TypeScript, configured to run in desktop and mobile browsers.
+A basic test automation suite covering the end-to-end booking workflow for the RMS Cloud application. Designed with Page Object Model principles using Playwright's out of the box implementation with TypeScript and configured to run in desktop and mobile browsers.
 
 
 ## Test Implementation
@@ -76,6 +76,11 @@ You can run the entire test suite or target specific configurations.
     npx playwright show-report
     ```
 
+Video recordings and trace of test runs are also uploaded and can be referred if you are unable to run the tests in your local machine.
+Desktop  - ./playwright-report/data/DesktopBrowser.webm
+Mobile - ./playwright-report/data/MobileBrowser.webm
+
+
 ## Assumptions & Limitations
 
 *   **Native Playwright**: The test suite is built upon the ready-to-use playwright test framework and does not manage any browser or driver functions.
@@ -86,7 +91,7 @@ You can run the entire test suite or target specific configurations.
 
 *   **Static Data**: The test relies on static data from `test-data.json`. It assumes that the search criteria (dates, guests) will yield available rooms.
 
-*   **Validation/Assertion**: Final Summary validation is kept simple by asserting static text for dates, guests etc., I have not done dynamical validation of extracting values during room selection or formatting dates for validation. While printing the final summary message to console is not ideal, I have retained it to showcase the success.
+*   **Validation/Assertion**: Final Summary validation is kept simple by asserting static text for dates, guests etc., Have not done dynamic validation of extracting values during room selection or formatting dates for validation. While printing the final summary message to console is not ideal, I have retained it to showcase the success.
 
 *   **Payment Gateway**: The test assumes the payment gateway is in a test or mock mode that accepts the provided test card details.
 

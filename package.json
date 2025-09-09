@@ -13,8 +13,5 @@
     "@playwright/test": "1.55.0",
     "@types/node": "22",
     "typescript": "5.1.6"
-  },
-  "dependencies": {
-    "playwright": "latest"
   }
 }
