@@ -1,0 +1,22 @@
+{
+  "baseURL": "https://alphaibe12.rmscloud.com/22749/1",
+  "bookingDetails": {
+    "dates": {
+      "checkIn": "Sunday, September 28,",
+      "checkOut": "Tuesday, September 30,"
+    },
+    "guestInfo": {
+      "title": "Mr",
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john.doe@mail.com",
+      "phone": "0488999888",
+      "address": "1 Rose Grange Boulevard"
+    },
+    "paymentInfo": {
+      "cardNumber": "4917610000000000",
+      "expiry": "03/30",
+      "cvc": "737"
+    }
+  }
+}

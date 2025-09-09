@@ -1,0 +1,20 @@
+{
+  "name": "rmscloud-tech-test",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "npx tsc --noEmit",
+    "test": "npx playwright test",
+    "desktop-test": "npx playwright test --project='Desktop Chrome'",
+    "mobile-test": "npx playwright test --project='Mobile Chrome'"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.55.0",
+    "@types/node": "22",
+    "typescript": "5.1.6"
+  },
+  "dependencies": {
+    "playwright": "latest"
+  }
+}
