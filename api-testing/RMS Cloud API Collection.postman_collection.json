@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "957e4f25-b14a-442f-851e-7a6ca6d0035f",
+		"name": "RMS Cloud API Collection",
+		"description": "API collection for testing RMS Cloud booking workflow endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "48239895",
+		"_collection_link": "https://lijo-consultant-2724742.postman.co/workspace/4903d9f9-f42c-47aa-88fa-1455076fe6e1/collection/48239895-957e4f25-b14a-442f-851e-7a6ca6d0035f?action=share&source=collection_link&creator=48239895"
+	},
+	"item": [
+		{
+			"name": "Pre-requisite - Get Connection URLs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"// Test to get the value of a specific cookie and set it as an global variable",
+							"pm.test(\"Extract and validate 'API Cookie' cookie\", function() {",
+							"  // Get the value of the cookie named 'ApiCookie'",
+							"  const cookieValue = pm.cookies.get(\"ApiCookie\");",
+							"",
+							"  // Log the extracted cookie value to the Postman console for debugging",
+							"  console.log(\"Extracted cookie value:\", cookieValue);",
+							"",
+							"  // Assert that the cookie was found and has a value",
+							"  pm.expect(cookieValue).to.be.a('string').and.not.empty;",
+							"",
+							"  // / Set the API Cookie value as global variable for future requests",
+							"  pm.globals.set(\"apiCookie\", cookieValue);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Clears the global variables after test run is completed",
+							"pm.test(\"Unsetting global variables\", function () {",
+							"    pm.globals.unset(\"apiCookie\");",
+							"    pm.globals.unset(\"addCartURL\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://alphaibe12.rmscloud.com/OnlineApi/GetConnectionURLs?clientId={{clientId}}&agentId={{agentId}}&qs=",
+					"protocol": "https",
+					"host": [
+						"alphaibe12",
+						"rmscloud",
+						"com"
+					],
+					"path": [
+						"OnlineApi",
+						"GetConnectionURLs"
+					],
+					"query": [
+						{
+							"key": "clientId",
+							"value": "{{clientId}}",
+							"description": "Client identifier"
+						},
+						{
+							"key": "agentId",
+							"value": "{{agentId}}",
+							"description": "Agent identifier"
+						},
+						{
+							"key": "qs",
+							"value": "",
+							"description": "Query string parameter"
+						}
+					]
+				},
+				"description": "Retrieves connection URLs from RMS Cloud API"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Category Availability Rates Data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Get response json body and use for test validations",
+							"const responseJsonData = pm.response.json();",
+							"const searchCriteria = responseJsonData.searchCriteria;",
+							"const categoryRows = responseJsonData.categoryRows;",
+							"",
+							"// Access the first object in the \"categoryRows\" array",
+							"const firstCategoryRow = responseJsonData.categoryRows[0];",
+							"// Access the first object in the \"tariffs\" array within the first category row",
+							"const firstTariff = firstCategoryRow.tariffs[0];",
+							"// Extract the addCartURL from the first tariff object",
+							"const addCartURL = firstTariff.addCartURL;",
+							"",
+							"// Tests: Validate the HTTP response status code is 200 (OK).",
+							"pm.test(\"Validate response status is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"// Test 2: Validate the 'adult' field value in the 'searchCriteria' object.",
+							"pm.test(\"Validate 'adult' value\", function () {",
+							"    pm.expect(searchCriteria.adult, \"The 'adult' value is incorrect\").to.eql(2);",
+							"});",
+							"// Test 3: Validate the 'child' field value in the 'searchCriteria' object.",
+							"pm.test(\"Validate 'child' value\", function () {",
+							"    pm.expect(searchCriteria.child, \"The 'child' value is incorrect\").to.eql(1);",
+							"});",
+							"// Test 4: Validate the 'dateRange' field value in the 'searchCriteria' object.",
+							"pm.test(\"Validate 'dateRange' value\", function () {",
+							"    pm.expect(searchCriteria.dateRange, \"The 'dateRange' value is incorrect\").to.eql(\"Sun 28 Sep 2025   to   Tue 30 Sep 2025\");",
+							"});",
+							"// Test 5: Validate that the 'categoryRows' array has exactly 2 elements.",
+							"pm.test(\"Validate 'categoryRows' has 2 elements\", function () {",
+							"    pm.expect(categoryRows.length).to.eql(2, \"categoryRows array should have exactly 2 elements\");",
+							"});",
+							"",
+							"",
+							"// Check if the addCartURL exists and is a string",
+							"pm.test(\"AddCart URL exists\", function () {",
+							"    pm.expect(addCartURL).to.be.a('string').and.to.have.lengthOf.at.least(1);",
+							"});",
+							"",
+							"// Set the extracted URL as an environment variable",
+							"pm.globals.set(\"addCartURL\", addCartURL);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "ApiCookie={{apiCookie}}",
+						"description": "Complete session cookies including ApiCookie, FullStory, Stripe, and DataDog",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://alphaibe12.rmscloud.com/OnlineApi/GetCatAvailRatesData?clientId={{clientId}}&onlineAgentId={{agentId}}&adults=2&children=1&infants=0&arriveDate=09/28/2025&departDate=09/30/2025&additional1=0&additional2=0&additional3=0&additional4=0&additional5=0&additional6=0&additional7=0&bookingType=3",
+					"protocol": "https",
+					"host": [
+						"alphaibe12",
+						"rmscloud",
+						"com"
+					],
+					"path": [
+						"OnlineApi",
+						"GetCatAvailRatesData"
+					],
+					"query": [
+						{
+							"key": "clientId",
+							"value": "{{clientId}}",
+							"description": "Client identifier"
+						},
+						{
+							"key": "onlineAgentId",
+							"value": "{{agentId}}",
+							"description": "Online agent identifier"
+						},
+						{
+							"key": "adults",
+							"value": "2",
+							"description": "Number of adults"
+						},
+						{
+							"key": "children",
+							"value": "1",
+							"description": "Number of children"
+						},
+						{
+							"key": "infants",
+							"value": "0",
+							"description": "Number of infants"
+						},
+						{
+							"key": "arriveDate",
+							"value": "09/28/2025",
+							"description": "Arrival date (MM/DD/YYYY format, URL encoded)"
+						},
+						{
+							"key": "departDate",
+							"value": "09/30/2025",
+							"description": "Departure date (MM/DD/YYYY format, URL encoded)"
+						},
+						{
+							"key": "additional1",
+							"value": "0",
+							"description": "Additional parameter 1"
+						},
+						{
+							"key": "additional2",
+							"value": "0",
+							"description": "Additional parameter 2"
+						},
+						{
+							"key": "additional3",
+							"value": "0",
+							"description": "Additional parameter 3"
+						},
+						{
+							"key": "additional4",
+							"value": "0",
+							"description": "Additional parameter 4"
+						},
+						{
+							"key": "additional5",
+							"value": "0",
+							"description": "Additional parameter 5"
+						},
+						{
+							"key": "additional6",
+							"value": "0",
+							"description": "Additional parameter 6"
+						},
+						{
+							"key": "additional7",
+							"value": "0",
+							"description": "Additional parameter 7"
+						},
+						{
+							"key": "bookingType",
+							"value": "3",
+							"description": "Type of booking"
+						}
+					]
+				},
+				"description": "Retrieves category availability and rates data for specified dates and guest counts. Requires full authentication."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test: Status code is 200 OK",
+							"pm.test(\"Status code is 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Parse the JSON response body",
+							"var responseBody = pm.response.json();",
+							"",
+							"// Test: 'cartId' is a valid UUID",
+							"pm.test(\"'cartId' exists and is a valid UUID\", function () {",
+							"    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;",
+							"    pm.expect(responseBody.cartId).to.match(uuidRegex);",
+							"});",
+							"",
+							"// Test: 'bShowCart' is a boolean and is true",
+							"pm.test(\"'bShowCart' is a boolean and is true\", function () {",
+							"    pm.expect(responseBody.bShowCart).to.be.true;",
+							"});",
+							"",
+							"// Test: 'nGrandTotal' is a number and is 200.00",
+							"pm.test(\"'nGrandTotal' is 200.00\", function () {",
+							"    pm.expect(responseBody.nGrandTotal).to.eql(200.00);",
+							"});",
+							"",
+							"// Test: 'oSiblings' is an array with at least one item",
+							"pm.test(\"'oSiblings' is an array with at least one item\", function () {",
+							"    pm.expect(responseBody.oSiblings).to.be.an(\"array\").and.to.have.lengthOf.at.least(1);",
+							"});",
+							"",
+							"// Iterate through 'oSiblings' array for specific checks",
+							"responseBody.oSiblings.forEach((sibling, index) => {",
+							"",
+							"    // Test: Sibling dates are populated correctly",
+							"    pm.test(`'Arrival' and 'Departure' dates are valid`, function () {",
+							"        pm.expect(sibling.dArrival).to.contain(\"2025-09-28\");",
+							"        pm.expect(sibling.dDeparture).to.contain(\"2025-09-30\");",
+							"    });",
+							"",
+							"    // Test: 'Sibling guest details",
+							"    pm.test(`Guest details are correct`, function () {",
+							"        pm.expect(sibling.nAdults).to.eql(2);",
+							"        pm.expect(sibling.nChildren).to.eql(1);",
+							"        pm.expect(sibling.nInfants).to.eql(0);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "ApiCookie={{apiCookie}}",
+						"description": "Complete session cookies including ApiCookie, FullStory, Stripe, and DataDog",
+						"type": "text"
+					}
+				],
+				"url": "https://alphaibe12.rmscloud.com{{addCartURL}}&adults=2&children=1&infants=0&CartId=",
+				"description": "Adds a booking to the cart. Creates a new cart if CartId is empty."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "clientId",
+			"value": "22749",
+			"description": "Standard client identifier"
+		},
+		{
+			"key": "agentId",
+			"value": "1",
+			"description": "Agent identifier"
+		}
+	]
+}
